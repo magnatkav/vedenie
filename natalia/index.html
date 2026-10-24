@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Личное ведение 21</title>
+<style>
+:root{
+  --bg:#f6f0e8; --card:#fffdf9; --ink:#3b2a1e; --mute:#8a7563; --line:#e8dccd;
+  --acc:#a0673a; --acc2:#c98e5a; --soft:#f1e4d4; --ok:#6f8f4e; --warn:#b5543c;
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:26px;margin:4px 0 2px}
+h2{font-size:18px;margin:0 0 12px}
+.sub{color:var(--mute);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 14px;box-shadow:0 2px 10px rgba(80,50,20,.05)}
+.day{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.day b{font-size:34px;color:var(--acc)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.stat{background:var(--soft);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:18px;line-height:1.2}
+.stat span{font-size:12px;color:var(--mute)}
+.alert{background:#f8e3da;color:var(--warn);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:14px}
+.goal{margin:0 0 16px}
+.goal:last-child{margin:0}
+.gt{display:flex;justify-content:space-between;gap:10px;font-weight:600}
+.gt span{font-weight:400;color:var(--mute);white-space:nowrap}
+.bar{height:12px;background:var(--soft);border-radius:8px;overflow:hidden;margin:6px 0 4px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:8px;transition:width .4s}
+.gd{font-size:13px;color:var(--mute)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.c{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;cursor:pointer;color:var(--ink);padding:0}
+.c small{font-size:10px;color:var(--mute)}
+.c.fut{opacity:.45;cursor:default}
+.c.miss{background:#fbf3ee}
+.c.today{outline:2px solid var(--acc);outline-offset:1px}
+.c.sel{box-shadow:0 0 0 3px var(--acc2) inset}
+.c.l1{background:#efe0cc}.c.l2{background:#e2c39f}.c.l3{background:var(--acc2);color:#fff}.c.l3 small{color:#fff}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--mute);margin-top:10px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+.fg{border-top:1px solid var(--line);padding:12px 0}
+.fg:first-of-type{border-top:0;padding-top:0}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tog{display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer}
+.tog input{width:22px;height:22px;accent-color:var(--acc)}
+input[type=number],textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff;color:var(--ink)}
+input[type=number]{max-width:200px}
+textarea{min-height:70px;resize:vertical}
+.chips{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 0;min-width:0;font:inherit;color:var(--ink);cursor:pointer}
+.chips button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;background:var(--acc);color:#fff;font:600 17px/1 inherit;font-family:inherit;cursor:pointer;margin-top:14px}
+.btn:disabled{opacity:.6}
+.msg{text-align:center;font-size:14px;margin-top:8px;min-height:20px}
+.calls li,.plan li{margin:0 0 8px}
+.calls{padding-left:18px;margin:0}
+.done{color:var(--mute);text-decoration:line-through}
+.pp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:6px 10px;align-items:center;font-size:14px}
+.pp .b2{height:8px;background:var(--soft);border-radius:6px;position:relative;margin:2px 0}
+.pp .b2 i{position:absolute;left:0;top:0;bottom:0;border-radius:6px}
+.empty{color:var(--mute);font-size:15px}
+.demo{background:#fff4d8;border:1px dashed var(--acc2);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:14px}
+svg{display:block;width:100%;height:auto}
+a{color:var(--acc)}
+.foot{text-align:center;color:var(--mute);font-size:13px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">Загрузка…</div>
+
+<script>
+/* ===== НАСТРОЙКИ ВЕДЕНИЯ (правит Claude после созвона) =====
+   api   — ссылка /exec из Apps Script. Пусто = отметки сохраняются только на этом телефоне.
+   goals — цели после созвона 3.11. type: sum (копится по дням: деньги, шаги),
+           days (сколько дней сделано), last (последнее значение: вес, сумма на счёте).
+   passport — 8 пунктов 1-10: before на 1-м созвоне, after на 3-м.                      */
+const CFG = {
+  api: '',
+  person: 'natalia',
+  name: 'Наталия',
+  start: '2026-11-02',
+  days: 21,
+  tg: 'https://t.me/magnatavk',
+  calls: [
+    ['2026-11-03', '11:00 мск', 'Созвон 1: цели в цифрах и план по дням'],
+    ['2026-11-12', '', 'Созвон 2: сверяем цифры, правим план'],
+    ['2026-11-22', '', 'Созвон 3: итог «было / стало»'],
+  ],
+  goals: [],
+  plan: [],
+  passport: { before: null, after: null },
+};
+
+const PASSPORT = ['Энергия','Сон','Настроение','Уверенность в деньгах','Тело и форма','Ясность в голове','Отношения','«Живу свою жизнь»'];
+
+const DEMO = new URLSearchParams(location.search).has('demo');
+if (DEMO) {
+  CFG.api = '';
+  CFG.goals = [
+    { id:'g1', title:'Доход от новых клиентов', type:'sum', unit:'руб.', start:0, target:50000, daily:'2 касания с клиентами в день' },
+    { id:'g2', title:'Ходьба', type:'sum', unit:'шагов', start:0, target:210000, daily:'10.000 шагов на цель' },
+    { id:'g3', title:'Первый час утра без телефона', type:'days', unit:'дн.', start:0, target:18, daily:'телефон в другой комнате до 8:00' },
+  ];
+  CFG.plan = [
+    { week:1, focus:'Запуск', steps:['Список из 20 тёплых контактов','2 касания в день','Утро без телефона'] },
+    { week:2, focus:'Разгон', steps:['Первые 2 продажи','Созвон 12.11: правим план'] },
+    { week:3, focus:'Финиш', steps:['Добить цель по доходу','Паспорт «стало» 22.11'] },
+  ];
+  CFG.passport = { before:[5,4,6,3,5,4,6,4], after:null };
+}
+
+/* ---------- даты ---------- */
+const pad = n => String(n).padStart(2,'0');
+const iso = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate()+n); return iso(d); };
+const diff = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
+const MON = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const human = s => { const d = parse(s); return d.getDate()+' '+MON[d.getMonth()]; };
+const WD = ['вс','пн','вт','ср','чт','пт','сб'];
+const today = iso(new Date());
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- данные ---------- */
+const LS = 'ved21_' + CFG.person;
+let marks = {};          // { '2026-11-02': { g:{g1:{ok:1,v:5000}}, e:7, n:'...' } }
+let sel = null;          // выбранный день формы
+
+function loadLocal() { try { return JSON.parse(localStorage.getItem(LS) || '{}'); } catch { return {}; } }
+function saveLocal() { try { localStorage.setItem(LS, JSON.stringify(marks)); } catch {} }
+
+async function api(q) {
+  const r = await fetch(CFG.api + '?p=' + encodeURIComponent(CFG.person) + '&' + q, { redirect:'follow' });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || 'ошибка');
+  return j;
+}
+
+function demoMarks() {
+  const m = {}, rnd = i => (i * 7919 % 13) / 13;
+  for (let i = 0; i < 9; i++) {
+    if (i === 6) continue;
+    m[addDays(CFG.start, i)] = { g:{ g1:{ok:rnd(i)>.3?1:0, v:rnd(i)>.6?4000:0}, g2:{ok:1, v:8000+Math.round(rnd(i+3)*5000)}, g3:{ok:rnd(i+1)>.25?1:0} }, e:5+Math.round(rnd(i+2)*4), n:'' };
+  }
+  return m;
+}
+
+/* ---------- расчёты ---------- */
+const DEMO_TODAY = DEMO ? addDays(CFG.start, 8) : today;
+
+function goalValue(g) {
+  const ds = Object.keys(marks).sort();
+  if (g.type === 'days') return ds.filter(d => marks[d].g?.[g.id]?.ok).length;
+  if (g.type === 'last') { for (let i = ds.length-1; i >= 0; i--) { const v = marks[ds[i]].g?.[g.id]?.v; if (v !== undefined && v !== '') return Number(v); } return g.start; }
+  return (g.start || 0) + ds.reduce((s, d) => s + (Number(marks[d].g?.[g.id]?.v) || 0), 0);
+}
+function goalPct(g) {
+  const v = goalValue(g);
+  const p = g.type === 'last' ? (v - g.start) / ((g.target - g.start) || 1) : v / (g.target || 1);
+  return Math.max(0, Math.min(1, p));
+}
+function level(d) {
+  const m = marks[d]; if (!m) return 0;
+  if (!CFG.goals.length) return 2;
+  const ok = CFG.goals.filter(g => m.g?.[g.id]?.ok).length / CFG.goals.length;
+  return ok >= .99 ? 3 : ok >= .5 ? 2 : 1;
+}
+
+/* ---------- отрисовка ---------- */
+function render() {
+  const now = DEMO ? DEMO_TODAY : today;
+  const no = diff(CFG.start, now) + 1;
+  const past = Math.max(0, Math.min(CFG.days, no));
+  const markedDays = Object.keys(marks).filter(d => diff(CFG.start, d) >= 0 && diff(CFG.start, d) < CFG.days);
+  let streak = 0; for (let d = now; marks[d]; d = addDays(d, -1)) streak++;
+  if (!marks[now]) { streak = 0; for (let d = addDays(now,-1); marks[d]; d = addDays(d, -1)) streak++; }
+  const last = markedDays.sort().slice(-1)[0];
+  const gap = no >= 1 ? (last ? diff(last, now) : no) : 0;
+
+  let head;
+  if (no < 1) head = `<div class="day">Старт <b>${human(CFG.start)}</b> <span class="sub" style="margin:0">через ${-no+1} ${plural(-no+1,'день','дня','дней')}</span></div>`;
+  else if (no > CFG.days) head = `<div class="day"><b>Финиш</b> 21 день позади 🏁</div>`;
+  else head = `<div class="day">День <b>${no}</b> из ${CFG.days} <span class="gd">${human(now)}</span></div>`;
+
+  const alert = (no >= 1 && no <= CFG.days + 1 && gap >= 2)
+    ? `<div class="alert">${last ? 'Последняя отметка ' + human(last) : 'Отметок пока нет'}. Отметь хотя бы одним словом, как ты, это займёт минуту.</div>` : '';
+
+  const goals = CFG.goals.length ? CFG.goals.map(g => {
+    const v = goalValue(g), p = goalPct(g);
+    const val = g.type === 'days' ? `${v} из ${g.target} ${g.unit}` : `${fmt(v)} из ${fmt(g.target)} ${esc(g.unit)}`;
+    return `<div class="goal"><div class="gt">${esc(g.title)}<span>${Math.round(p*100)}%</span></div>
+      <div class="bar"><i style="width:${p*100}%"></i></div>
+      <div class="gd">${val}${g.daily ? ' · каждый день: ' + esc(g.daily) : ''}</div></div>`;
+  }).join('') : `<p class="empty">Цели в цифрах появятся после первого созвона ${human(CFG.calls[0][0])}. Здесь будет видно, сколько уже пройдено по каждой.</p>`;
+
+  let cal = '';
+  for (let i = 0; i < CFG.days; i++) {
+    const d = addDays(CFG.start, i), dd = parse(d);
+    const cls = ['c'];
+    if (diff(d, now) < 0) cls.push('fut');
+    else if (marks[d]) cls.push('l' + level(d));
+    else if (d !== now) cls.push('miss');
+    if (d === now) cls.push('today');
+    if (d === sel) cls.push('sel');
+    cal += `<button class="${cls.join(' ')}" data-d="${d}" ${diff(d, now) < 0 ? 'disabled' : ''}>${dd.getDate()}<small>${WD[dd.getDay()]}</small></button>`;
+  }
+
+  const energy = sparkline();
+
+  const plan = CFG.plan.length ? '<ol class="plan" style="padding-left:18px;margin:0">' + CFG.plan.map(w =>
+    `<li><b>Неделя ${w.week}: ${esc(w.focus)}</b><br><span class="gd">${w.steps.map(esc).join(' · ')}</span></li>`).join('') + '</ol>'
+    : '<p class="empty">План по неделям составим на первом созвоне.</p>';
+
+  const calls = '<ul class="calls">' + CFG.calls.map(c =>
+    `<li class="${diff(c[0], now) > 0 ? 'done' : ''}"><b>${human(c[0])}${c[1] ? ', ' + c[1] : ''}</b> · ${esc(c[2])}</li>`).join('') + '</ul>';
+
+  const pp = CFG.passport.before ? `<div class="card"><h2>Паспорт: было → стало</h2><div class="pp">` +
+    PASSPORT.map((t, i) => {
+      const b = CFG.passport.before[i], a = CFG.passport.after?.[i];
+      return `<div>${t}</div><div><div class="b2"><i style="width:${b*10}%;background:#d9c2a6"></i></div>${a != null ? `<div class="b2"><i style="width:${a*10}%;background:var(--acc)"></i></div>` : ''}<span class="gd">${b}${a != null ? ' → <b>' + a + '</b>' : ''} из 10</span></div>`;
+    }).join('') + `</div>${CFG.passport.after ? '' : '<p class="gd" style="margin:10px 0 0">«Стало» заполним на финальном созвоне.</p>'}</div>` : '';
+
+  document.getElementById('app').innerHTML = `
+    ${DEMO ? '<div class="demo">Это образец с придуманными цифрами, чтобы показать, как будет выглядеть страница.</div>' : ''}
+    <h1>${esc(CFG.name)}, твои 21 день</h1>
+    <p class="sub">Личное ведение · ${human(CFG.start)} → ${human(addDays(CFG.start, CFG.days-1))}</p>
+
+    <div class="card">${head}
+      <div class="stats">
+        <div class="stat"><b>${markedDays.length}</b><span>из ${past} дней отмечено</span></div>
+        <div class="stat"><b>${streak}</b><span>дней подряд</span></div>
+        <div class="stat"><b>${last ? human(last) : '-'}</b><span>последняя отметка</span></div>
+      </div>${alert}
+    </div>
+
+    <div class="card"><h2>Цели</h2>${goals}</div>
+
+    <div class="card"><h2>Отметить день</h2>
+      <div class="cal" id="cal">${cal}</div>
+      <div class="legend"><span><i style="background:var(--acc2)"></i>всё сделано</span><span><i style="background:#e2c39f"></i>половина</span><span><i style="background:#efe0cc"></i>отметилась</span><span><i style="background:#fbf3ee;border:1px solid var(--line)"></i>пропуск</span></div>
+      <div id="form"></div>
+    </div>
+
+    ${energy ? `<div class="card"><h2>Энергия по дням</h2>${energy}</div>` : ''}
+    <div class="card"><h2>План</h2>${plan}</div>
+    ${pp}
+    <div class="card"><h2>Созвоны</h2>${calls}<p style="margin:12px 0 0">Что-то не идёт или есть вопрос? <a href="${CFG.tg}" target="_blank">Напиши Толе</a></p></div>
+    <p class="foot">${CFG.api ? 'Отметки сохраняются автоматически, Толя видит их здесь же.' : DEMO ? '' : 'Отметки пока сохраняются только на этом телефоне.'}</p>`;
+
+  document.getElementById('cal').onclick = e => { const b = e.target.closest('button[data-d]'); if (b && !b.disabled) { sel = b.dataset.d; render(); } };
+  renderForm(now);
+}
+
+function plural(n, a, b, c) { const m = n % 100, k = n % 10; return (m > 10 && m < 20) ? c : k === 1 ? a : (k > 1 && k < 5) ? b : c; }
+
+function sparkline() {
+  const pts = []; for (let i = 0; i < CFG.days; i++) { const m = marks[addDays(CFG.start, i)]; if (m && m.e) pts.push([i, m.e]); }
+  if (pts.length < 2) return '';
+  const W = 600, H = 120, x = i => 20 + i * (W - 40) / (CFG.days - 1), y = e => H - 15 - (e - 1) * (H - 30) / 9;
+  const path = pts.map((p, k) => (k ? 'L' : 'M') + x(p[0]).toFixed(1) + ' ' + y(p[1]).toFixed(1)).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Энергия по дням">
+    <line x1="20" x2="${W-20}" y1="${y(5)}" y2="${y(5)}" stroke="#e8dccd" stroke-dasharray="4 4"/>
+    <path d="${path}" fill="none" stroke="#a0673a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    ${pts.map(p => `<circle cx="${x(p[0])}" cy="${y(p[1])}" r="5" fill="#fffdf9" stroke="#a0673a" stroke-width="2.5"><title>День ${p[0]+1}: ${p[1]} из 10</title></circle>`).join('')}
+    <text x="20" y="12" font-size="12" fill="#8a7563">10</text><text x="20" y="${H-2}" font-size="12" fill="#8a7563">1</text>
+  </svg>`;
+}
+
+function renderForm(now) {
+  const box = document.getElementById('form');
+  const no = diff(CFG.start, now) + 1;
+  const d = sel || (no >= 1 && no <= CFG.days ? now : null);
+  if (!d) { box.innerHTML = `<p class="empty" style="margin-top:14px">${no < 1 ? 'Отмечать начнём ' + human(CFG.start) + '.' : 'Марафон завершён. Можно нажать на любой день и поправить отметку.'}</p>`; return; }
+  const m = marks[d] || { g:{}, e:0, n:'' };
+  const goalRows = CFG.goals.length ? CFG.goals.map(g => {
+    const gv = m.g?.[g.id] || {};
+    const num = g.type !== 'days'
+      ? `<div class="row" style="margin-top:8px"><input type="number" inputmode="numeric" min="0" step="any" data-v="${g.id}" value="${gv.v ?? ''}" placeholder="${g.type === 'last' ? 'сейчас' : 'сколько за день'}"> <span class="gd">${esc(g.unit)}</span></div>` : '';
+    return `<div class="fg"><label class="tog"><input type="checkbox" data-ok="${g.id}" ${gv.ok ? 'checked' : ''}> ${esc(g.title)}</label>${g.daily ? `<div class="gd">${esc(g.daily)}</div>` : ''}${num}</div>`;
+  }).join('') : '';
+  box.innerHTML = `<div style="margin-top:16px">
+    <h2>${d === now ? 'Сегодня' : human(d)}, день ${diff(CFG.start, d) + 1}</h2>
+    ${goalRows}
+    <div class="fg"><div style="font-weight:600;margin-bottom:6px">Энергия сегодня</div>
+      <div class="chips" id="chips">${[1,2,3,4,5,6,7,8,9,10].map(i => `<button type="button" data-e="${i}" class="${m.e === i ? 'on' : ''}">${i}</button>`).join('')}</div></div>
+    <div class="fg"><div style="font-weight:600;margin-bottom:6px">Что получилось, что мешало</div>
+      <textarea id="note" maxlength="500" placeholder="Пара слов, можно коротко">${esc(m.n)}</textarea></div>
+    <button class="btn" id="save">Сохранить день</button>
+    <div class="msg" id="msg"></div></div>`;
+  let energy = m.e || 0;
+  document.getElementById('chips').onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    energy = Number(b.dataset.e);
+    document.querySelectorAll('#chips button').forEach(x => x.classList.toggle('on', x === b));
+  };
+  document.getElementById('save').onclick = () => save(d, energy);
+}
+
+async function save(d, energy) {
+  const entry = { g:{}, e:energy, n:document.getElementById('note').value.trim().slice(0, 500) };
+  CFG.goals.forEach(g => {
+    const ok = document.querySelector(`[data-ok="${g.id}"]`)?.checked ? 1 : 0;
+    const vEl = document.querySelector(`[data-v="${g.id}"]`);
+    const v = vEl && vEl.value !== '' ? Number(vEl.value) : undefined;
+    entry.g[g.id] = v === undefined ? { ok } : { ok, v };
+  });
+  const btn = document.getElementById('save'), msg = document.getElementById('msg');
+  marks[d] = entry; saveLocal();
+  if (DEMO || !CFG.api) { sel = d; render(); document.getElementById('msg').textContent = DEMO ? 'В образце ничего не сохраняется 🙂' : 'Сохранено на этом телефоне ✓'; return; }
+  btn.disabled = true; msg.textContent = 'Сохраняю…';
+  try {
+    await api('a=save&d=' + d + '&j=' + encodeURIComponent(JSON.stringify(entry)));
+    sel = d; render(); document.getElementById('msg').textContent = 'Сохранено ✓ Толя увидит';
+  } catch (e) {
+    btn.disabled = false; msg.innerHTML = '<span style="color:var(--warn)">Не получилось отправить, нет связи. Отметка сохранена на телефоне, нажми «Сохранить» ещё раз чуть позже.</span>';
+  }
+}
+
+/* ---------- старт ---------- */
+(async () => {
+  marks = DEMO ? demoMarks() : loadLocal();
+  render();
+  if (!DEMO && CFG.api) {
+    try { const j = await api('a=get'); marks = Object.assign({}, marks, j.marks || {}); saveLocal(); render(); }
+    catch (e) { /* нет связи: показываем то, что на телефоне */ }
+  }
+})();
+</script>
+</body>
+</html>
