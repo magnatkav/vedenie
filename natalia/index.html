@@ -33,9 +33,8 @@ body{font-variant-numeric:lining-nums;margin:0;background:var(--cream);color:var
 @keyframes up{to{opacity:1;transform:none}}
 
 /* --- обложка --- */
-.hero{text-align:center;margin-bottom:22px}
-.arch{width:min(78vw,330px);margin:0 auto -6px;display:block;filter:drop-shadow(0 18px 30px rgba(110,63,37,.18))}
-.kicker{font:600 11px/1 var(--sans);letter-spacing:.32em;text-transform:uppercase;color:var(--terra);margin:22px 0 6px}
+.hero{text-align:center;margin:26px 0 24px}
+.kicker{font:600 11px/1 var(--sans);letter-spacing:.32em;text-transform:uppercase;color:var(--terra);margin:0 0 10px}
 .name{font:italic 500 64px/1 var(--serif);margin:0;letter-spacing:-.01em;background:linear-gradient(120deg,var(--deep),var(--terra) 55%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .08em}
 .dates{font:italic 400 20px/1.3 var(--serif);color:var(--mute);margin:8px 0 0}
 .orn{display:flex;align-items:center;justify-content:center;gap:12px;color:var(--gold);margin:16px auto 0;font-size:12px}
@@ -262,32 +261,6 @@ function level(d) {
   return ok >= .99 ? 3 : ok >= .5 ? 2 : 1;
 }
 
-/* ---------- обложка: арка с дюнами (линии песка как линии тела) ---------- */
-const ARCH = `<svg class="arch" viewBox="0 0 300 380" role="img" aria-label="Арка с дюнами на закате">
-  <defs>
-    <clipPath id="ac"><path d="M10 380V150A140 140 0 0 1 290 150V380Z"/></clipPath>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf1e6"/><stop offset=".55" stop-color="#f6d9c3"/><stop offset="1" stop-color="#efc1a4"/></linearGradient>
-    <radialGradient id="sun" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#fff4e2"/><stop offset=".6" stop-color="#f1c48f"/><stop offset="1" stop-color="#df9f67"/></radialGradient>
-    <radialGradient id="glow"><stop offset="0" stop-color="#fbe2c2" stop-opacity=".9"/><stop offset="1" stop-color="#fbe2c2" stop-opacity="0"/></radialGradient>
-    <linearGradient id="d1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecc9a6"/><stop offset="1" stop-color="#d9a57c"/></linearGradient>
-    <linearGradient id="d2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d69a6f"/><stop offset="1" stop-color="#b8734a"/></linearGradient>
-    <linearGradient id="d3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9653f"/><stop offset="1" stop-color="#6e3f25"/></linearGradient>
-    <linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#fff3df" stop-opacity="0"/><stop offset=".5" stop-color="#fff3df"/><stop offset="1" stop-color="#fff3df" stop-opacity="0"/></linearGradient>
-  </defs>
-  <g clip-path="url(#ac)">
-    <rect width="300" height="380" fill="url(#sky)"/>
-    <circle cx="196" cy="172" r="90" fill="url(#glow)"><animate attributeName="r" values="86;98;86" dur="7s" repeatCount="indefinite"/></circle>
-    <circle cx="196" cy="172" r="38" fill="url(#sun)"/>
-    <path d="M10 236C60 216 100 212 146 222S226 246 290 216V380H10Z" fill="url(#d1)"/>
-    <path d="M10 334C28 331 44 326 58 318C78 306 90 268 118 252C138 241 156 252 165 266C173 279 179 290 191 290C205 290 212 270 226 266C236 263 241 272 245 276C243 262 249 250 259 250C269 250 274 261 272 273C271 281 278 289 290 293V380H10Z" fill="url(#d2)"/>
-    <path d="M10 358C70 350 110 334 150 338C196 342 214 364 290 354V380H10Z" fill="url(#d3)"/>
-    <path d="M10 334C28 331 44 326 58 318C78 306 90 268 118 252C138 241 156 252 165 266C173 279 179 290 191 290C205 290 212 270 226 266C236 263 241 272 245 276C243 262 249 250 259 250C269 250 274 261 272 273C271 281 278 289 290 293" fill="none" stroke="#fff3df" stroke-opacity=".95" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="480" stroke-dashoffset="480"><animate attributeName="stroke-dashoffset" from="480" to="0" dur="3.2s" begin=".4s" fill="freeze"/></path>
-    <path d="M10 236C60 216 100 212 146 222S226 246 290 216" fill="none" stroke="#fff6ea" stroke-opacity=".7" stroke-width="1" stroke-dasharray="360" stroke-dashoffset="360"><animate attributeName="stroke-dashoffset" from="360" to="0" dur="3s" begin=".1s" fill="freeze"/></path>
-  </g>
-  <path d="M10 380V150A140 140 0 0 1 290 150V380" fill="none" stroke="#c4925f" stroke-width="1.2" stroke-opacity=".7"/>
-  <path d="M22 380V152A128 128 0 0 1 278 152V380" fill="none" stroke="#fff" stroke-width=".8" stroke-opacity=".6"/>
-</svg>`;
-
 /* ---------- отрисовка ---------- */
 function render() {
   const now = NOW;
@@ -343,7 +316,7 @@ function render() {
 
   document.getElementById('app').innerHTML = `
     ${DEMO ? '<div class="demo">Образец с придуманными цифрами: так страница будет выглядеть в пути</div>' : ''}
-    ${R(`<header class="hero">${ARCH}<p class="kicker">Личное ведение · 21 день</p><h1 class="name">${esc(CFG.name)}</h1><p class="dates">${human(CFG.start)} → ${human(addDays(CFG.start, CFG.days-1))}</p><div class="orn">✦</div></header>`, 0)}
+    ${R(`<header class="hero"><p class="kicker">Личное ведение · 21 день</p><h1 class="name">${esc(CFG.name)}</h1><p class="dates">${human(CFG.start)} → ${human(addDays(CFG.start, CFG.days-1))}</p><div class="orn">✦</div></header>`, 0)}
     ${R(`<div class="card">${head}<div class="pearls">${pearls}</div>
       <div class="stats">
         <div class="stat"><b>${markedDays.length}</b><span>из ${past} дней</span></div>
