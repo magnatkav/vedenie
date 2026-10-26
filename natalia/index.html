@@ -195,7 +195,7 @@ svg.chart{display:block;width:100%;height:auto}
            daily — действие на каждый день, это крупная строка в форме (галочка = сделала его).
            type: sum (копится по дням: деньги, касания), days (сколько дней сделано),
            last (последнее значение: вес, сумма на счёте).
-   notes — «Слово от Анатолия», если таблица не подключена (с таблицей берутся с листа «Слово от Анатолия»).
+   notes — «Слово от Анатолия»: вписываются здесь по расшифровкам созвонов, плюс строки с листа «Слово от Анатолия», если есть.
    passport — 8 пунктов 1-10: before на 1-м созвоне, after на 3-м.
    Образцы: ?demo=1 (9-й день), ?demo=final (итог после 21 дня).                      */
 const CFG = {
@@ -560,7 +560,8 @@ async function sync() {
     const j = await api('a=get');
     // таблица главнее телефона, но то, что ещё не дошло, остаётся своим
     marks = Object.assign({}, marks, j.marks || {}, queue.all()); store.set('', marks);
-    if (j.notes?.length) notes = j.notes;
+    // слова из страницы (вписываю я по расшифровкам) + с листа таблицы, без повторов
+    if (j.notes?.length) notes = CFG.notes.concat(j.notes.filter(n => !CFG.notes.some(c => c.d === n.d && c.t === n.t)));
     if (!document.activeElement?.matches('input,textarea')) render();   // не сбивать, пока она печатает
   } catch (e) { /* нет связи: показываем то, что на телефоне */ }
 }
