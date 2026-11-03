@@ -179,6 +179,7 @@ svg.chart{display:block;width:100%;height:auto}
 .foot{text-align:center;color:var(--mute);font-size:13px;margin-top:22px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
 @media (max-width:370px){.name{font-size:46px}.chips{gap:3px}.chips button{font-size:13px}}
+.week-list{padding-left:22px;color:var(--mute);line-height:1.7}.week-list li{margin:8px 0}
 </style>
 </head>
 <body>
@@ -188,7 +189,7 @@ svg.chart{display:block;width:100%;height:auto}
 <div class="wrap" id="app"></div>
 
 <script>
-/* ===== НАСТРОЙКИ ВЕДЕНИЯ (правит Claude после созвона) =====
+/* ===== НАСТРОЙКИ ВЕДЕНИЯ (обновляет помощник после созвона) =====
    api   — ссылка /exec из Apps Script. Пусто = отметки сохраняются только на этом телефоне.
    why   — её «зачем» её же словами (с первого созвона).
    goals — цели после созвона 3.11. Ходьбу НЕ добавлять: шаги она сдаёт в чат марафона.
@@ -206,16 +207,106 @@ const CFG = {
   start: '2026-11-02',
   days: 21,
   tg: 'https://t.me/magnatavk',
-  why: '',
+  why: 'Мне, наверное, нужен какой-то пошаговый план, по которому бы я действовала',
   calls: [
-    ['2026-11-03', '11:00 мск', 'Цели в цифрах и план по дням'],
-    ['2026-11-12', '', 'Сверяем цифры, правим план'],
-    ['2026-11-22', '', 'Итог «было / стало»'],
+    ['2026-11-03', '11:00 МСК · состоялся', 'Выбрали первые шаги и зафиксировали старт'],
+    ['2026-11-10', '11:00 МСК', 'Смотрим первую неделю и вместе выбираем следующие шаги'],
+    ['2026-11-22', 'время уточним', 'Итог «было / стало» · предварительная дата'],
   ],
-  goals: [],
-  plan: [],
-  notes: [],
-  passport: { before: null, after: null },
+  goals: [
+  {
+    "id": "food",
+    "title": "Наблюдение за питанием",
+    "type": "days",
+    "unit": "дн.",
+    "start": 0,
+    "target": 7,
+    "daily": "Записала питание в FatSecret",
+    "since": "2026-11-03",
+    "until": "2026-11-09",
+    "cadence": "daily",
+    "help": "Первая неделя: записывай привычное питание. Обсудим наблюдения на созвоне 10 ноября."
+  },
+  {
+    "id": "reels",
+    "title": "Простые рилсы: пробуем привычку",
+    "type": "sum",
+    "unit": "рилсов",
+    "start": 0,
+    "target": 14,
+    "daily": "Сколько рилсов выложила сегодня",
+    "since": "2026-11-03",
+    "until": "2026-11-09",
+    "cadence": "daily",
+    "dailyTarget": 2,
+    "help": "На первой неделе пробуем 2 в день: профессиональный и личный. Без сложного монтажа. Если тяжело, напиши Анатолию — уменьшим нагрузку."
+  },
+  {
+    "id": "tails",
+    "title": "Закрыть два лёгких «хвоста»",
+    "type": "sum",
+    "unit": "дел",
+    "start": 0,
+    "target": 2,
+    "daily": "Сколько лёгких «хвостов» закрыла сегодня",
+    "since": "2026-11-03",
+    "until": "2026-11-09",
+    "cadence": "weekly",
+    "help": "Всего два за неделю. Выбери дела, которые можно закончить целиком. В день без такого дела поле можно оставить пустым."
+  },
+  {
+    "id": "channels",
+    "title": "Подобрать Telegram-каналы",
+    "type": "sum",
+    "unit": "каналов",
+    "start": 0,
+    "target": 5,
+    "daily": "Сколько новых каналов добавила в список сегодня",
+    "since": "2026-11-03",
+    "until": "2026-11-09",
+    "cadence": "weekly",
+    "help": "Собери 5–10 подходящих каналов для содержательных комментариев. Ссылки отправь Анатолию. Каждый канал учитывай один раз."
+  }
+],
+  plan: [
+  {
+    "week": 1,
+    "focus": "3–9 ноября · мягкий старт",
+    "steps": [
+      "Наблюдать за привычным питанием и записывать его в FatSecret",
+      "Достать весы, записать исходный вес и замеры; повторить к следующему созвону",
+      "Пробовать 2 простых рилса в день: профессиональный и личный",
+      "Подобрать 5–10 Telegram-каналов",
+      "Выписать «хвосты» и закрыть два самых лёгких",
+      "Шаги отмечать, как обычно, в чате марафона"
+    ]
+  },
+  {
+    "week": 2,
+    "focus": "10 ноября · сверка и следующий шаг",
+    "steps": [
+      "Созвон во вторник в 11:00 МСК",
+      "Обсудить питание, самочувствие и посильность нагрузки",
+      "Посмотреть публикации и список каналов",
+      "Следующий план выберем вместе, по результатам первой недели"
+    ]
+  },
+  {
+    "week": 3,
+    "focus": "Сохранить то, что подходит тебе",
+    "steps": [
+      "Действия уточним после следующего созвона",
+      "В конце сравним состояние и реальные результаты с началом"
+    ]
+  }
+],
+  notes: [
+  {
+    "d": "2026-11-03",
+    "t": "Наталия, сегодня появилась определённость, что делать и куда двигаться. На первую неделю берём небольшие шаги. Не нужно делать идеально или держать весь план в голове: отмечай то, что получилось. Если становится тяжело или непонятно, напиши мне сразу, не жди созвона. Вместе упростим задачу. Следующая встреча — 10 ноября в 11:00 МСК."
+  }
+],
+  passport: { before: [[1,2],[3,4],2,0,[4,5],null,7,7], after: null },
 };
 
 const PASSPORT = ['Энергия','Сон','Настроение','Уверенность в деньгах','Тело и форма','Ясность в голове','Отношения','«Живу свою жизнь»'];
@@ -301,8 +392,11 @@ function demoMarks() {
 }
 
 /* ---------- расчёты ---------- */
+const goalActive = (g, d) => (!g.since || d >= g.since) && (!g.until || d <= g.until);
+const activeGoals = d => CFG.goals.filter(g => goalActive(g, d));
+const dailyGoals = d => activeGoals(d).filter(g => g.cadence !== 'weekly');
 function goalValue(g) {
-  const ds = Object.keys(marks).sort();
+  const ds = Object.keys(marks).filter(d => inPeriod(d) && goalActive(g, d)).sort();
   if (g.type === 'days') return ds.filter(d => marks[d].g?.[g.id]?.ok).length;
   if (g.type === 'last') { for (let i = ds.length-1; i >= 0; i--) { const v = marks[ds[i]].g?.[g.id]?.v; if (v !== undefined && v !== '') return Number(v); } return g.start; }
   return (g.start || 0) + ds.reduce((s, d) => s + (Number(marks[d].g?.[g.id]?.v) || 0), 0);
@@ -316,7 +410,8 @@ const goalText = g => { const v = goalValue(g); return g.type === 'days' ? `${v}
 function level(d) {
   const m = marks[d]; if (!m) return 0;
   if (!CFG.goals.length) return 2;
-  const ok = CFG.goals.filter(g => m.g?.[g.id]?.ok).length / CFG.goals.length;
+  const gs = dailyGoals(d);
+  const ok = gs.length ? gs.filter(g => m.g?.[g.id]?.ok).length / gs.length : 0;
   return ok >= .99 ? 3 : ok >= .5 ? 2 : 1;
 }
 function streakAt(now) { let s = 0; for (let d = marks[now] ? now : addDays(now, -1); marks[d]; d = addDays(d, -1)) s++; return s; }
@@ -342,7 +437,7 @@ function render() {
   const goals = CFG.goals.length ? CFG.goals.map(g => {
     const p = goalPct(g);
     return `<div class="goal"><div class="ring"><svg viewBox="0 0 76 76"><circle class="tr" cx="38" cy="38" r="32"/><circle class="pr" cx="38" cy="38" r="32" stroke-dasharray="${C}" stroke-dashoffset="${first ? C : C * (1 - p)}" data-off="${C * (1 - p)}"/></svg><b>${Math.round(p*100)}%</b></div>
-      <div class="gi"><h3>${esc(g.title)}</h3><p class="v">${goalText(g)}</p>${g.daily ? `<p>каждый день: ${esc(g.daily)}</p>` : ''}</div></div>`;
+      <div class="gi"><h3>${esc(g.title)}</h3><p class="v">${goalText(g)}</p>${g.until ? `<p>первая неделя · 3–9 ноября</p>` : g.daily ? `<p>каждый день: ${esc(g.daily)}</p>` : ''}</div></div>`;
   }).join('') : `<p class="p">Цели в цифрах появятся после первого созвона ${human(CFG.calls[0][0])}. Здесь будет видно, как растёт каждая.</p>`;
 
   let cal = '';
@@ -362,7 +457,7 @@ function render() {
   const notesSec = noteList.length ? R(`<section class="sec" id="notes"><h2>Слово от ${CFG.coach === 'Анатолий' ? 'Анатолия' : esc(CFG.coach)}${unseen ? '<span class="new"><i></i>новое</span>' : ''}</h2>${noteHtml(noteList[0])}${noteList.length > 1 ? `<details><summary>Раньше (${noteList.length - 1})</summary><div style="margin-top:10px">${noteList.slice(1).map(noteHtml).join('')}</div></details>` : ''}</section>`, 2) : '';
 
   const energy = chart();
-  const wk = inside ? Math.min(CFG.plan.length, Math.floor((no - 1) / 7) + 1) : 0;
+  const wk = inside ? Math.min(CFG.plan.length, Math.max(1, Math.floor(diff(DEMO === null ? '2026-11-03' : CFG.start, now) / 7) + 1)) : 0;
   const plan = CFG.plan.length
     ? '<ol class="plan">' + CFG.plan.map((w, i) => `<li class="${i + 1 === wk ? 'cur' : i + 1 < wk ? 'was' : ''}"><b>${esc(w.focus)}</b>${i + 1 === wk ? '<em>сейчас</em>' : ''}<p>${w.steps.map(esc).join(' · ')}</p></li>`).join('') + '</ol>'
     : '<p class="p">План по неделям сложим вместе на первом созвоне.</p>';
@@ -371,8 +466,10 @@ function render() {
   const pp = CFG.passport.before ? R(`<section class="sec"><h2>Было → стало</h2><div class="pp">` +
     PASSPORT.map((t, i) => {
       const b = CFG.passport.before[i], a = CFG.passport.after?.[i];
-      return `<div>${t}</div><div><div class="ln"><i style="width:${b*10}%;background:#dcc2a5"></i></div>${a != null ? `<div class="ln"><i style="width:${a*10}%;background:var(--grad)"></i></div>` : ''}<div class="n">${b}${a != null ? ' → <b>' + a + '</b>' : ''} из 10</div></div>`;
-    }).join('') + `</div>${CFG.passport.after ? '' : '<p class="p" style="margin-top:12px">«Стало» допишем в последний день.</p>'}</section>`, 8) : '';
+      const value = v => Array.isArray(v) ? (v[0] + v[1]) / 2 : v;
+      const label = v => v == null ? 'не оценивали' : Array.isArray(v) ? v.join('–') + ' из 10' : v + ' из 10';
+      return `<div>${t}</div><div><div class="ln"><i style="width:${(value(b) ?? 0)*10}%;background:#dcc2a5"></i></div>${a != null ? `<div class="ln"><i style="width:${a*10}%;background:var(--grad)"></i></div>` : ''}<div class="n">${label(b)}${a != null ? ' → <b>' + label(a) + '</b>' : ''}</div></div>`;
+    }).join('') + `</div>${CFG.passport.after ? '' : '<p class="p" style="margin-top:12px">Это твои оценки на первом созвоне. Диапазоны сохранены, ясность отдельно не оценивали. «Стало» сравним в конце.</p>'}</section>`, 8) : '';
 
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const inTg = typeof window.TelegramWebviewProxy !== 'undefined' || /telegram/i.test(navigator.userAgent);
@@ -381,6 +478,14 @@ function render() {
   const install = showInstall ? `<div class="install" id="install"><div>${inTg
       ? `<b>Сейчас страница открыта внутри Телеграма.</b> Нажми ⋯ вверху → «Открыть в браузере», а там ${addHow}. Тогда страница всегда будет под рукой, в одно касание.`
       : `<b>Поставь на главный экран</b>, чтобы открывать в одно касание: ${addHow}.`}</div><button aria-label="Скрыть" id="noinst">×</button></div>` : '';
+
+  const firstWeek = DEMO === null ? R(`<section class="sec" id="first-week"><p class="kicker">После созвона 3 ноября</p><h2>Твоя первая неделя</h2>
+    <p class="p">Главное — понятные шаги и посильный ритм. Первая неделя плана: 3–9 ноября. 10 ноября посмотрим, что получилось, и решим, как продолжать.</p>
+    <details style="margin-top:16px"><summary>С чего начать сегодня</summary><ul class="week-list"><li>Достань весы и запиши исходные замеры для себя.</li><li>Установи FatSecret и начни записывать питание.</li><li>Сними и выложи один-два простых рилса — именно их ты выбрала в конце созвона.</li><li>Дополни список «хвостов»; выбери два самых лёгких на неделю.</li></ul></details>
+    <details style="margin-top:14px"><summary>Telegram и помощь Анатолия</summary><p class="p">Ты подбираешь 5–10 подходящих каналов, где сможешь оставлять содержательные комментарии. Пришли мне ссылки на свой канал и личный профиль — подготовлю рекомендации по оформлению. Если хочешь, отправь готовый ролик-презентацию: посмотрим, как использовать его по частям.</p><p class="p">Платная реклама обсуждалась как возможность на будущее. В обязательный план недели она не входит.</p></details>
+    <p class="p" style="margin-top:16px">Шаги — в чат марафона. Здесь вечером отмечай действия и энергию. Если задач много, напиши мне: нагрузку можно уменьшить.</p>
+  </section>`, 2) : '';
+
   const coachTo = CFG.coach === 'Анатолий' ? 'Анатолию' : CFG.coach;
 
   document.getElementById('app').innerHTML = `
@@ -390,13 +495,14 @@ function render() {
     ${R(`<div class="main" id="today"></div>`, 1)}
     ${install}
     ${notesSec}
+    ${firstWeek}
     ${R(`<section class="sec"><h2>Прогресс</h2><div class="pearls">${pearls}</div>
       <div class="stats">
         <div class="stat"><b>${markedDays.length}</b><span>из ${past} ${plural(past,'дня','дней','дней')}</span></div>
         <div class="stat"><b>${streak}</b><span>подряд</span></div>
         <div class="stat"><b class="sm">${last ? human(last) : '·'}</b><span>последняя</span></div>
       </div></section>`, 3)}
-    ${R(`<section class="sec"><h2>Цели</h2>${goals}</section>`, 4)}
+    ${R(`<section class="sec"><h2>Первые шаги в цифрах</h2>${goals}</section>`, 4)}
     ${R(`<section class="sec"><h2>Все дни</h2><div class="cal" id="cal">${cal}</div>
       <div class="legend"><span><i style="background:var(--grad)"></i>всё сделано</span><span><i style="background:#e8c9a6"></i>половина</span><span><i style="background:#f4e6d6;border:1px solid var(--line)"></i>отметилась</span><span><i style="border:1px dashed var(--mute)"></i>пропуск</span></div>
       <p class="p" style="margin-top:8px;font-size:14px">Нажми на прошедший день, чтобы отметить или поправить.</p></section>`, 5)}
@@ -453,8 +559,9 @@ function renderToday(now, no, gap, last) {
 
   if (!sel && marks[d] && !editing) {
     const m = marks[d];
-    const okN = CFG.goals.filter(g => m.g?.[g.id]?.ok).length;
-    const sum = [CFG.goals.length ? `сделано: ${okN} из ${CFG.goals.length}` : '', m.e ? `энергия ${m.e} из 10` : ''].filter(Boolean).join(' · ');
+    const gs = dailyGoals(d);
+    const okN = gs.filter(g => m.g?.[g.id]?.ok).length;
+    const sum = [gs.length ? `действия дня: ${okN} из ${gs.length}` : '', m.e ? `энергия ${m.e} из 10` : ''].filter(Boolean).join(' · ');
     box.innerHTML = `${head}<div class="done"><div class="ok">✓</div><div><b>День отмечен</b><p>${sum || 'Отметка сохранена'}</p></div></div>
       <div class="msg" id="msg" style="text-align:left"></div>
       <p style="margin:6px 0 0"><button class="link" id="edit">Изменить</button></p>`;
@@ -464,14 +571,19 @@ function renderToday(now, no, gap, last) {
 
   const m = marks[d] || { g:{}, e:0, n:'' };
   // крупно — действие дня (галочка = сделала его), мелко — к какой цели оно ведёт
-  const goalRows = CFG.goals.map(g => {
+  const scheduled = activeGoals(d);
+  const goalRows = scheduled.map((g, i) => {
     const gv = m.g?.[g.id] || {};
     const num = g.type !== 'days'
       ? `<div class="num"><input type="number" inputmode="numeric" min="0" step="any" data-v="${g.id}" value="${gv.v ?? ''}" placeholder="${g.type === 'last' ? 'сколько сейчас' : 'сколько за сегодня'}"><span>${esc(g.unit)}</span></div>` : '';
-    return `<div class="fg"><label class="tog"><input type="checkbox" data-ok="${g.id}" ${gv.ok ? 'checked' : ''}>${esc(g.daily || g.title)}</label>${g.daily ? `<p class="hint">цель: ${esc(g.title)}</p>` : ''}${num}</div>`;
+    const heading = g.cadence === 'weekly' && (i === 0 || scheduled[i-1].cadence !== 'weekly') ? '<h3 style="margin-top:24px">В течение недели · не каждый день</h3>' : '';
+    const action = g.type === 'days'
+      ? `<label class="tog"><input type="checkbox" data-ok="${g.id}" ${gv.ok ? 'checked' : ''}>${esc(g.daily || g.title)}</label>`
+      : `<label class="lab" for="value-${g.id}">${esc(g.daily || g.title)}</label>`;
+    return `${heading}<div class="fg">${action}${g.help ? `<p class="hint">${esc(g.help)}</p>` : ''}${num.replace('type="number"', `id="value-${g.id}" type="number"`)}</div>`;
   }).join('');
   box.innerHTML = `${head}${alert}
-    ${goalRows}
+    ${goalRows || '<p class="p">Действия следующей недели согласуем на созвоне. Пока можно отметить энергию и написать, как прошёл день.</p>'}
     <div class="fg"><div class="lab">Энергия</div>
       <div class="chips" id="chips">${[1,2,3,4,5,6,7,8,9,10].map(i => `<button type="button" data-e="${i}" class="${m.e === i ? 'on' : ''}">${i}</button>`).join('')}</div></div>
     <div class="fg"><div class="lab">Что получилось, что мешало</div>
@@ -485,7 +597,11 @@ function renderToday(now, no, gap, last) {
     energy = Number(b.dataset.e);
     document.querySelectorAll('#chips button').forEach(x => x.classList.toggle('on', x === b));
   };
-  document.getElementById('save').onclick = () => save(d, energy);
+  document.getElementById('save').onclick = () => {
+    const bad = [...document.querySelectorAll('[data-v]')].find(el => el.value !== '' && (!Number.isFinite(Number(el.value)) || Number(el.value) < 0 || !Number.isInteger(Number(el.value))));
+    if (bad) { document.getElementById('msg').textContent = 'Укажи целое число от нуля или оставь поле пустым.'; bad.focus(); return; }
+    save(d, energy);
+  };
   document.getElementById('back')?.addEventListener('click', () => { sel = null; editing = false; render(); });
 }
 
@@ -535,11 +651,13 @@ function milestones(before) {
 }
 
 async function save(d, energy) {
-  const entry = { g:{}, e:energy, n:document.getElementById('note').value.trim().slice(0, 1500) };
-  CFG.goals.forEach(g => {
-    const ok = document.querySelector(`[data-ok="${g.id}"]`)?.checked ? 1 : 0;
+  const entry = { g:{...(marks[d]?.g || {})}, e:energy, n:document.getElementById('note').value.trim().slice(0, 1500) };
+  activeGoals(d).forEach(g => {
+    let ok = document.querySelector(`[data-ok="${g.id}"]`)?.checked ? 1 : 0;
     const vEl = document.querySelector(`[data-v="${g.id}"]`);
     const v = vEl && vEl.value !== '' ? Number(vEl.value) : undefined;
+    if (v !== undefined && (!Number.isFinite(v) || v < 0 || (g.type === 'sum' && !Number.isInteger(v)))) throw new Error('Введите целое неотрицательное число');
+    if (g.type !== 'days') ok = v >= (g.dailyTarget || 1) ? 1 : 0;
     entry.g[g.id] = v === undefined ? { ok } : { ok, v };
   });
   const before = { streak: streakAt(NOW), pct: Object.fromEntries(CFG.goals.map(g => [g.id, goalPct(g)])) };
