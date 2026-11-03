@@ -306,7 +306,7 @@ const CFG = {
     "t": "Наталия, сегодня появилась определённость, что делать и куда двигаться. На первую неделю берём небольшие шаги. Не нужно делать идеально или держать весь план в голове: отмечай то, что получилось. Если становится тяжело или непонятно, напиши мне сразу, не жди созвона. Вместе упростим задачу. Следующая встреча — 10 ноября в 11:00 МСК."
   }
 ],
-  passport: { before: [[1,2],[3,4],2,0,[4,5],null,7,7], after: null },
+  passport: { before: [[1,2],[3,4],2,4,[4,5],4,7,7], after: null },
 };
 
 const PASSPORT = ['Энергия','Сон','Настроение','Уверенность в деньгах','Тело и форма','Ясность в голове','Отношения','«Живу свою жизнь»'];
@@ -469,7 +469,7 @@ function render() {
       const value = v => Array.isArray(v) ? (v[0] + v[1]) / 2 : v;
       const label = v => v == null ? 'не оценивали' : Array.isArray(v) ? v.join('–') + ' из 10' : v + ' из 10';
       return `<div>${t}</div><div><div class="ln"><i style="width:${(value(b) ?? 0)*10}%;background:#dcc2a5"></i></div>${a != null ? `<div class="ln"><i style="width:${a*10}%;background:var(--grad)"></i></div>` : ''}<div class="n">${label(b)}${a != null ? ' → <b>' + label(a) + '</b>' : ''}</div></div>`;
-    }).join('') + `</div>${CFG.passport.after ? '' : '<p class="p" style="margin-top:12px">Это твои оценки на первом созвоне. Диапазоны сохранены, ясность отдельно не оценивали. «Стало» сравним в конце.</p>'}</section>`, 8) : '';
+    }).join('') + `</div>${CFG.passport.after ? '' : '<p class="p" style="margin-top:12px">Это твои оценки на старте с уточнениями после созвона. Диапазоны сохранены. «Стало» сравним в конце.</p>'}</section>`, 8) : '';
 
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const inTg = typeof window.TelegramWebviewProxy !== 'undefined' || /telegram/i.test(navigator.userAgent);
