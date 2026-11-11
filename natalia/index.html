@@ -420,6 +420,22 @@ const queue = {
   put(d, e) { const q = queue.all(); q[d] = e; store.set('_q', q); },
   drop(d, sent) { const q = queue.all(); if (sent && JSON.stringify(q[d]) !== JSON.stringify(sent)) return; delete q[d]; store.set('_q', q); },
 };
+function backupLocalMarks() {
+  if (DEMO !== null) return;
+  try {
+    const key = LS + '_recovery_20261111';
+    const rawMarks = localStorage.getItem(LS), rawQueue = localStorage.getItem(LS + '_q');
+    const hasData = Object.keys(store.get('', {})).length || Object.keys(queue.all()).length;
+    if (hasData && !localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify({ savedAt:new Date().toISOString(), rawMarks, rawQueue }));
+  } catch { /* Existing records are never removed if the backup cannot be written. */ }
+}
+function downloadMarks() {
+  const snapshot = { person:CFG.person, exportedAt:new Date().toISOString(), marks:Object.assign({}, marks, queue.all()), pending:queue.all(), originalBackup:store.get('_recovery_20261111', null) };
+  const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type:'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = 'moi-otmetki-' + CFG.person + '-' + today() + '.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 let marks = {};          // { '2026-11-02': { g:{g1:{ok:1,v:5000}}, e:7, n:'...' } }
 let notes = CFG.notes;   // [{ d:'2026-11-09', t:'...' }]
 let sel = null;          // выбранный прошлый день
@@ -593,9 +609,10 @@ function render() {
     ${R(`<section class="sec"><h2>План</h2>${plan}</section>`, 7)}
     ${pp}
     ${R(`<section class="sec"><h2>Созвоны</h2>${calls}<a class="tg" href="${CFG.tg}" target="_blank" rel="noopener">Написать ${esc(coachTo)} →</a></section>`, 9)}
-    <p class="foot" id="sync-status" role="status" aria-live="polite">${esc(syncMessage())}</p>${DEMO === null && CFG.api ? '<p style="text-align:center"><button class="link" id="sync-retry">Обновить и отправить отметки</button></p>' : ''}`;
+    <p class="foot" id="sync-status" role="status" aria-live="polite">${esc(syncMessage())}</p>${DEMO === null && CFG.api ? '<p style="text-align:center"><button class="link" id="sync-retry">Обновить и отправить отметки</button></p><p style="text-align:center"><button class="link" id="backup-marks">Скачать копию моих отметок</button></p>' : ''}`;
 
   document.getElementById('sync-retry')?.addEventListener('click', sync);
+  document.getElementById('backup-marks')?.addEventListener('click', downloadMarks);
   renderSync();
   document.getElementById('cal').onclick = e => {
     const b = e.target.closest('button[data-d]'); if (!b || b.disabled) return;
@@ -770,7 +787,14 @@ async function sync() {
   try {
     // Fetch shared history before flushing: a failed queued write must not hide existing days.
     const j = await api('a=get');
-    marks = Object.assign({}, marks, j.marks || {}, queue.all()); store.set('', marks);
+    if (!j.marks || typeof j.marks !== 'object' || Array.isArray(j.marks)) throw new Error('Таблица не вернула отметки');
+    // Restore only missing days. Existing shared days are not overwritten by an old local copy.
+    backupLocalMarks();
+    const pending = queue.all();
+    for (const [date, entry] of Object.entries(marks)) {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date) && inPeriod(date) && entry && typeof entry === 'object' && !Object.prototype.hasOwnProperty.call(j.marks, date) && !Object.prototype.hasOwnProperty.call(pending, date)) queue.put(date, entry);
+    }
+    marks = Object.assign({}, marks, j.marks, queue.all()); store.set('', marks);
     if (j.notes?.length) notes = CFG.notes.concat(j.notes.filter(n => !CFG.notes.some(c => c.d === n.d && c.t === n.t)));
     try { await flush(); syncState = 'ok'; } catch { syncState = 'error'; }
   } catch { syncState = 'error'; }
@@ -782,6 +806,7 @@ async function sync() {
 }
 
 (async () => {
+  backupLocalMarks();
   marks = DEMO !== null ? demoMarks() : store.get('', {});
   render();
   if (DEMO === null && CFG.api) {
