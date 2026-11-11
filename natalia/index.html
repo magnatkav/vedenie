@@ -210,7 +210,8 @@ const CFG = {
   why: 'Мне, наверное, нужен какой-то пошаговый план, по которому бы я действовала',
   calls: [
     ['2026-11-03', '11:00 МСК · состоялся', 'Выбрали первые шаги и зафиксировали старт'],
-    ['2026-11-10', '11:00 МСК', 'Смотрим первую неделю и вместе выбираем следующие шаги'],
+    ['2026-11-10', 'состоялся', 'Закрепляем посильные действия и добавляем отдых'],
+    ['2026-11-17', 'время уточним', 'Следующий созвон'],
     ['2026-11-22', 'время уточним', 'Итог «было / стало» · предварительная дата'],
   ],
   goals: [
@@ -266,37 +267,91 @@ const CFG = {
     "until": "2026-11-09",
     "cadence": "weekly",
     "help": "Собери 5–10 подходящих каналов для содержательных комментариев. Ссылки отправь Анатолию. Каждый канал учитывай один раз."
+  },
+  {
+    "id": "food2",
+    "title": "Питание: продолжаю наблюдать",
+    "type": "days",
+    "unit": "дн.",
+    "start": 0,
+    "target": null,
+    "daily": "Записала питание в FatSecret",
+    "cadence": "daily",
+    "help": "Продолжай привычный учёт питания. Сегодня достаточно отметить, удалось ли записать.",
+    "since": "2026-11-10",
+    "until": "2026-11-22",
+    "periodLabel": "с 10 ноября · продолжаем в удобном темпе"
+  },
+  {
+    "id": "rest",
+    "title": "Время для отдыха",
+    "type": "days",
+    "unit": "дн.",
+    "start": 0,
+    "target": null,
+    "daily": "Выделила время для отдыха",
+    "cadence": "daily",
+    "help": "Отметь, если выделила время для подходящего тебе отдыха. В заметке можно написать, что помогло и было ли чувство вины. Строгого расписания пока нет.",
+    "since": "2026-11-10",
+    "until": "2026-11-22",
+    "periodLabel": "с 10 ноября · продолжаем в удобном темпе"
+  },
+  {
+    "id": "reels2",
+    "title": "Видео в посильном темпе",
+    "type": "sum",
+    "unit": "видео",
+    "start": 0,
+    "target": null,
+    "daily": "Сколько видео выложила сегодня",
+    "cadence": "weekly",
+    "help": "Продолжай в удобном тебе темпе, без обязательной нормы два видео в день. В день без публикаций можно оставить поле пустым.",
+    "since": "2026-11-10",
+    "until": "2026-11-22",
+    "periodLabel": "с 10 ноября · продолжаем в удобном темпе"
+  },
+  {
+    "id": "tails2",
+    "title": "Посильное закрытие хвостов",
+    "type": "sum",
+    "unit": "дел",
+    "start": 0,
+    "target": null,
+    "daily": "Сколько хвостов закрыла сегодня",
+    "cadence": "weekly",
+    "help": "Отмечай законченные дела. Обязательной ежедневной нормы нет; если сегодня не закрывала хвосты, поле можно оставить пустым.",
+    "since": "2026-11-10",
+    "until": "2026-11-22",
+    "periodLabel": "с 10 ноября · продолжаем в удобном темпе"
   }
 ],
   plan: [
   {
     "week": 1,
-    "focus": "3–9 ноября · мягкий старт",
+    "focus": "3–9 ноября · первый план",
     "steps": [
-      "Наблюдать за привычным питанием и записывать его в FatSecret",
-      "Достать весы, записать исходный вес и замеры; повторить к следующему созвону",
-      "Пробовать 2 простых рилса в день: профессиональный и личный",
-      "Подобрать 5–10 Telegram-каналов",
-      "Выписать «хвосты» и закрыть два самых лёгких",
-      "Шаги отмечать, как обычно, в чате марафона"
+      "Наблюдение за питанием, простые видео и лёгкие хвосты",
+      "План первой недели сохранён в истории отметок"
     ]
   },
   {
     "week": 2,
-    "focus": "10 ноября · сверка и следующий шаг",
+    "focus": "После созвона 10 ноября",
     "steps": [
-      "Созвон во вторник в 11:00 МСК",
-      "Обсудить питание, самочувствие и посильность нагрузки",
-      "Посмотреть публикации и список каналов",
-      "Следующий план выберем вместе, по результатам первой недели"
+      "Продолжать записывать питание в FatSecret",
+      "Публиковать видео в посильном темпе, без новой обязательной нормы",
+      "Закрывать посильные хвосты",
+      "Выделять время для отдыха и замечать, что помогает восстановиться",
+      "Поиск каналов и комментирование пока убраны из плана"
     ]
   },
   {
     "week": 3,
-    "focus": "Сохранить то, что подходит тебе",
+    "focus": "Продолжать то, что подходит",
     "steps": [
-      "Действия уточним после следующего созвона",
-      "В конце сравним состояние и реальные результаты с началом"
+      "До уточнения на созвоне сохраняем посильный режим",
+      "Следующий созвон 17 ноября, время уточним",
+      "В конце сравним состояние и результаты с началом"
     ]
   }
 ],
@@ -304,6 +359,10 @@ const CFG = {
   {
     "d": "2026-11-03",
     "t": "Наталия, сегодня появилась определённость, что делать и куда двигаться. На первую неделю берём небольшие шаги. Не нужно делать идеально или держать весь план в голове: отмечай то, что получилось. Если становится тяжело или непонятно, напиши мне сразу, не жди созвона. Вместе упростим задачу. Следующая встреча — 10 ноября в 11:00 МСК."
+  },
+  {
+    "d": "2026-11-10",
+    "t": "Наталия, продолжаем то, что у тебя получается: питание, посильные видео и закрытие хвостов. Добавляем время для отдыха. Поиск каналов пока убрали. Отмечай вечером то, что сделала, без попытки выполнить всё идеально. Следующий созвон 17 ноября, время уточним."
   }
 ],
   passport: { before: [[1,2],[3,4],2,4,[4,5],4,7,7], after: null },
@@ -359,26 +418,50 @@ const store = {
 const queue = {
   all: () => store.get('_q', {}),
   put(d, e) { const q = queue.all(); q[d] = e; store.set('_q', q); },
-  drop(d) { const q = queue.all(); delete q[d]; store.set('_q', q); },
+  drop(d, sent) { const q = queue.all(); if (sent && JSON.stringify(q[d]) !== JSON.stringify(sent)) return; delete q[d]; store.set('_q', q); },
 };
 let marks = {};          // { '2026-11-02': { g:{g1:{ok:1,v:5000}}, e:7, n:'...' } }
 let notes = CFG.notes;   // [{ d:'2026-11-09', t:'...' }]
 let sel = null;          // выбранный прошлый день
 let editing = false;     // правка уже отмеченного «сегодня»
 let first = true;
+let syncState = 'loading';
+let syncBusy = false;
+function syncMessage() {
+  if (DEMO !== null || !CFG.api) return '';
+  const pending = Object.keys(queue.all()).length;
+  if (syncState === 'ok' && !pending) return 'Отметки загружены из общей таблицы. Сохранённые изменения доступны и Анатолию.';
+  if (syncState === 'loading') return 'Проверяю сохранение отметок…';
+  return pending
+    ? `На этом устройстве есть неотправленные отметки: ${pending}. Они сохранены здесь. Пока Анатолий может их не видеть. Данные браузера не очищай. Попробуй отправить ещё раз.`
+    : 'Не удалось загрузить общую таблицу. Пока показаны отметки с этого устройства, они могут быть неполными. Попробуй обновить данные.';
+}
+function renderSync() {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.textContent = syncMessage();
+  const retry = document.getElementById('sync-retry');
+  if (retry) { retry.hidden = syncState === 'ok' && !Object.keys(queue.all()).length; retry.disabled = syncBusy; }
+}
 
 async function api(q, body) {
   const url = CFG.api + '?p=' + encodeURIComponent(CFG.person) + '&' + q;
-  // text/plain: Google принимает такой POST без лишней проверки браузера, длина заметки не ограничена ссылкой
-  const opt = body ? { method:'POST', body:JSON.stringify(body), headers:{ 'Content-Type':'text/plain;charset=utf-8' }, redirect:'follow' } : { redirect:'follow' };
-  const r = await fetch(url, opt);
-  const j = await r.json();
-  if (!j.ok) throw new Error(j.error || 'ошибка');
-  return j;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+  try {
+    const opt = body ? { method:'POST', body:JSON.stringify(body), headers:{ 'Content-Type':'text/plain;charset=utf-8' }, redirect:'follow', signal:controller.signal } : { redirect:'follow', signal:controller.signal };
+    const r = await fetch(url, opt);
+    if (!r.ok) throw new Error('Не удалось связаться с таблицей');
+    const text = await r.text();
+    let j;
+    try { j = JSON.parse(text); } catch { throw new Error('Таблица не ответила данными'); }
+    if (!j.ok) throw new Error('Таблица не подтвердила сохранение');
+    return j;
+  } finally { clearTimeout(timer); }
 }
 async function flush() {
   let j = null;
-  for (const [d, e] of Object.entries(queue.all())) { j = await api('a=save&d=' + d, e); queue.drop(d); }
+  for (const [d, e] of Object.entries(queue.all())) { j = await api('a=save&d=' + d, e); queue.drop(d, e); }
   return j;
 }
 
@@ -406,7 +489,7 @@ function goalPct(g) {
   const p = g.type === 'last' ? (v - g.start) / ((g.target - g.start) || 1) : v / (g.target || 1);
   return Math.max(0, Math.min(1, p));
 }
-const goalText = g => { const v = goalValue(g); return g.type === 'days' ? `${v} из ${g.target} ${esc(g.unit)}` : `${fmt(v)} из ${fmt(g.target)} ${esc(g.unit)}`; };
+const goalText = g => { const v = goalValue(g); if (g.target == null) return `${fmt(v)} ${esc(g.unit)}`; return g.type === 'days' ? `${v} из ${g.target} ${esc(g.unit)}` : `${fmt(v)} из ${fmt(g.target)} ${esc(g.unit)}`; };
 function level(d) {
   const m = marks[d]; if (!m) return 0;
   if (!CFG.goals.length) return 2;
@@ -436,8 +519,9 @@ function render() {
   const C = 2 * Math.PI * 32;
   const goals = CFG.goals.length ? CFG.goals.map(g => {
     const p = goalPct(g);
+    if (g.target == null) return `<div class="goal"><div class="gi"><h3>${esc(g.title)}</h3><p class="v">${goalText(g)}</p><p>${esc(g.periodLabel || "В удобном тебе темпе")}</p></div></div>`;
     return `<div class="goal"><div class="ring"><svg viewBox="0 0 76 76"><circle class="tr" cx="38" cy="38" r="32"/><circle class="pr" cx="38" cy="38" r="32" stroke-dasharray="${C}" stroke-dashoffset="${first ? C : C * (1 - p)}" data-off="${C * (1 - p)}"/></svg><b>${Math.round(p*100)}%</b></div>
-      <div class="gi"><h3>${esc(g.title)}</h3><p class="v">${goalText(g)}</p>${g.until ? `<p>первая неделя · 3–9 ноября</p>` : g.daily ? `<p>каждый день: ${esc(g.daily)}</p>` : ''}</div></div>`;
+      <div class="gi"><h3>${esc(g.title)}</h3><p class="v">${goalText(g)}</p>${g.until ? `<p>${esc(g.periodLabel || 'первая неделя · 3–9 ноября')}</p>` : g.daily ? `<p>каждый день: ${esc(g.daily)}</p>` : ''}</div></div>`;
   }).join('') : `<p class="p">Цели в цифрах появятся после первого созвона ${human(CFG.calls[0][0])}. Здесь будет видно, как растёт каждая.</p>`;
 
   let cal = '';
@@ -479,11 +563,10 @@ function render() {
       ? `<b>Сейчас страница открыта внутри Телеграма.</b> Нажми ⋯ вверху → «Открыть в браузере», а там ${addHow}. Тогда страница всегда будет под рукой, в одно касание.`
       : `<b>Поставь на главный экран</b>, чтобы открывать в одно касание: ${addHow}.`}</div><button aria-label="Скрыть" id="noinst">×</button></div>` : '';
 
-  const firstWeek = DEMO === null ? R(`<section class="sec" id="first-week"><p class="kicker">После созвона 3 ноября</p><h2>Твоя первая неделя</h2>
-    <p class="p">Главное — понятные шаги и посильный ритм. Первая неделя плана: 3–9 ноября. 10 ноября посмотрим, что получилось, и решим, как продолжать.</p>
-    <details style="margin-top:16px"><summary>С чего начать сегодня</summary><ul class="week-list"><li>Достань весы и запиши исходные замеры для себя.</li><li>Установи FatSecret и начни записывать питание.</li><li>Сними и выложи один-два простых рилса — именно их ты выбрала в конце созвона.</li><li>Дополни список «хвостов»; выбери два самых лёгких на неделю.</li></ul></details>
-    <details style="margin-top:14px"><summary>Telegram и помощь Анатолия</summary><p class="p">Ты подбираешь 5–10 подходящих каналов, где сможешь оставлять содержательные комментарии. Пришли мне ссылки на свой канал и личный профиль — подготовлю рекомендации по оформлению. Если хочешь, отправь готовый ролик-презентацию: посмотрим, как использовать его по частям.</p><p class="p">Платная реклама обсуждалась как возможность на будущее. В обязательный план недели она не входит.</p></details>
-    <p class="p" style="margin-top:16px">Шаги — в чат марафона. Здесь вечером отмечай действия и энергию. Если задач много, напиши мне: нагрузку можно уменьшить.</p>
+  const firstWeek = DEMO === null ? R(`<section class="sec" id="first-week"><p class="kicker">После созвона 10 ноября</p><h2>Продолжаем в удобном темпе</h2>
+    <p class="p">Сохраняем питание, посильные видео и хвосты. Добавляем время для отдыха. Поиск каналов и комментирование пока убрали. Больше заданий на себя брать не нужно.</p>
+    <details style="margin-top:16px"><summary>Что отмечать вечером</summary><ul class="week-list"><li>Удалось ли записать питание в FatSecret.</li><li>Было ли время для отдыха.</li><li>Сколько видео выложила и сколько хвостов закрыла, если занималась ими сегодня.</li><li>Энергию по шкале 1–10 и пару слов о том, как прошёл день.</li></ul></details>
+    <p class="p" style="margin-top:16px">Шаги по-прежнему отмечай в чате марафона. Следующий созвон 17 ноября, время уточним. Старые дни доступны в календаре, их отметки сохраняются отдельно.</p>
   </section>`, 2) : '';
 
   const coachTo = CFG.coach === 'Анатолий' ? 'Анатолию' : CFG.coach;
@@ -510,8 +593,10 @@ function render() {
     ${R(`<section class="sec"><h2>План</h2>${plan}</section>`, 7)}
     ${pp}
     ${R(`<section class="sec"><h2>Созвоны</h2>${calls}<a class="tg" href="${CFG.tg}" target="_blank" rel="noopener">Написать ${esc(coachTo)} →</a></section>`, 9)}
-    <p class="foot">${CFG.api ? 'Отметки сохраняются сами, ' + esc(CFG.coach) + ' их видит' : DEMO !== null ? '' : 'Пока отметки хранятся только на этом телефоне'}</p>`;
+    <p class="foot" id="sync-status" role="status" aria-live="polite">${esc(syncMessage())}</p>${DEMO === null && CFG.api ? '<p style="text-align:center"><button class="link" id="sync-retry">Обновить и отправить отметки</button></p>' : ''}`;
 
+  document.getElementById('sync-retry')?.addEventListener('click', sync);
+  renderSync();
   document.getElementById('cal').onclick = e => {
     const b = e.target.closest('button[data-d]'); if (!b || b.disabled) return;
     sel = b.dataset.d === now ? null : b.dataset.d; editing = b.dataset.d === now;
@@ -550,7 +635,7 @@ function renderToday(now, no, gap, last) {
         <div><b>${bestStreak()}</b><span>дней подряд, лучшая серия</span></div>
         <div><b>${e1} → ${e3}</b><span>энергия: 1-я неделя → 3-я</span></div>
       </div>
-      ${CFG.goals.map(g => `<div class="fg2"><span>${esc(g.title)}</span><b>${goalText(g)} · ${Math.round(goalPct(g) * 100)}%</b></div>`).join('')}
+      ${CFG.goals.map(g => `<div class="fg2"><span>${esc(g.title)}</span><b>${goalText(g)}${g.target == null ? '' : ' · ' + Math.round(goalPct(g) * 100) + '%'}</b></div>`).join('')}
       <p class="p" style="margin-top:12px">Нажми на любой день ниже, чтобы перечитать или поправить отметку.</p>`;
     return;
   }
@@ -562,7 +647,13 @@ function renderToday(now, no, gap, last) {
     const gs = dailyGoals(d);
     const okN = gs.filter(g => m.g?.[g.id]?.ok).length;
     const sum = [gs.length ? `действия дня: ${okN} из ${gs.length}` : '', m.e ? `энергия ${m.e} из 10` : ''].filter(Boolean).join(' · ');
+    const dayDetails = activeGoals(d).map(g => {
+      const value = m.g?.[g.id];
+      const label = g.type === 'days' ? (value?.ok ? 'да' : 'не отмечено') : value?.v !== undefined && value.v !== '' ? `${fmt(value.v)} ${esc(g.unit)}` : 'не указано';
+      return `<div class="fg2"><span>${esc(g.daily || g.title)}</span><b>${label}</b></div>`;
+    }).join('');
     box.innerHTML = `${head}<div class="done"><div class="ok">✓</div><div><b>День отмечен</b><p>${sum || 'Отметка сохранена'}</p></div></div>
+      ${dayDetails}${m.n ? `<p class="p" style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(m.n)}</p>` : ''}
       <div class="msg" id="msg" style="text-align:left"></div>
       <p style="margin:6px 0 0"><button class="link" id="edit">Изменить</button></p>`;
     document.getElementById('edit').onclick = () => { editing = true; renderToday(now, no, gap, last); };
@@ -632,6 +723,7 @@ function milestones(before) {
   const s = streakAt(NOW);
   [21, 14, 7, 3].some(n => { if (s >= n && before.streak < n && !shown.includes('s' + n)) { out.push(['s' + n, `${n} ${plural(n,'день','дня','дней')} подряд`, n === 21 ? 'Весь путь без пропусков. Это большая победа!' : 'Ты держишь ритм. Так и рождается привычка.']); return true; } });
   CFG.goals.forEach(g => {
+    if (g.target == null) return;
     const p = goalPct(g), b = before.pct[g.id] || 0;
     if (p >= 1 && b < 1 && !shown.includes(g.id + '100')) out.push([g.id + '100', 'Цель достигнута!', `«${g.title}»: 100%. Ты сделала это!`]);
     else if (p >= .5 && b < .5 && !shown.includes(g.id + '50')) out.push([g.id + '50', 'Половина пути', `«${g.title}»: уже ${Math.round(p * 100)}%. Дальше легче.`]);
@@ -667,29 +759,37 @@ async function save(d, energy) {
   if (DEMO !== null || !CFG.api) return finish(DEMO !== null ? 'В образце ничего не сохраняется ✦' : 'Сохранено на этом телефоне ✦');
   queue.put(d, entry);
   btn.disabled = true; msg.textContent = 'Сохраняю…';
-  try { await api('a=save&d=' + d, entry); queue.drop(d); finish(''); }
-  catch (e) { finish('Нет связи, отметка сохранена на телефоне. Она сама уйдёт Анатолию, когда появится интернет.'); }
+  try { await api('a=save&d=' + d, entry); queue.drop(d, entry); syncState = 'ok'; finish('Сохранено в общей таблице'); }
+  catch (e) { syncState = 'error'; finish('Отметка пока сохранена только на этом устройстве. После восстановления связи с таблицей попробуем отправить её снова.'); }
 }
 
 /* ---------- старт ---------- */
 async function sync() {
+  if (syncBusy || DEMO !== null || !CFG.api) return;
+  syncBusy = true; syncState = 'loading'; renderSync();
   try {
-    await flush();
+    // Fetch shared history before flushing: a failed queued write must not hide existing days.
     const j = await api('a=get');
-    // таблица главнее телефона, но то, что ещё не дошло, остаётся своим
     marks = Object.assign({}, marks, j.marks || {}, queue.all()); store.set('', marks);
-    // слова из страницы (вписываю я по расшифровкам) + с листа таблицы, без повторов
     if (j.notes?.length) notes = CFG.notes.concat(j.notes.filter(n => !CFG.notes.some(c => c.d === n.d && c.t === n.t)));
-    if (!document.activeElement?.matches('input,textarea')) render();   // не сбивать, пока она печатает
-  } catch (e) { /* нет связи: показываем то, что на телефоне */ }
+    try { await flush(); syncState = 'ok'; } catch { syncState = 'error'; }
+  } catch { syncState = 'error'; }
+  finally {
+    syncBusy = false;
+    if (!document.activeElement?.matches('input,textarea')) render();
+    renderSync();
+  }
 }
+
 (async () => {
   marks = DEMO !== null ? demoMarks() : store.get('', {});
   render();
   if (DEMO === null && CFG.api) {
     sync();
     addEventListener('online', sync);
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Object.keys(queue.all()).length) sync(); });
+    addEventListener('focus', sync);
+    setInterval(sync, 60000);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sync(); });
   }
 })();
 </script>
