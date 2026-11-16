@@ -716,21 +716,24 @@ function renderToday(now, no, gap, last) {
 function chart() {
   const pts = []; for (let i = 0; i < CFG.days; i++) { const m = marks[addDays(CFG.start, i)]; if (m && m.e) pts.push([i, m.e]); }
   if (pts.length < 2) return '';
-  const W = 600, H = 170, x = i => 24 + i * (W - 48) / (CFG.days - 1), y = e => H - 22 - (e - 1) * (H - 44) / 9;
+  const W = 600, H = 170, dateLabel = i => { const d = parse(addDays(CFG.start, i)); return `${pad(d.getDate())}.${pad(d.getMonth()+1)}`; }, x = i => 24 + i * (W - 48) / (CFG.days - 1), y = e => H - 22 - (e - 1) * (H - 44) / 9;
   let line = `M${x(pts[0][0])} ${y(pts[0][1])}`;
   for (let k = 1; k < pts.length; k++) {
     const [a, b] = [pts[k-1], pts[k]], mx = (x(a[0]) + x(b[0])) / 2;
     line += ` C${mx} ${y(a[1])} ${mx} ${y(b[1])} ${x(b[0])} ${y(b[1])}`;
   }
   const area = `${line} L${x(pts.at(-1)[0])} ${H - 8} L${x(pts[0][0])} ${H - 8}Z`;
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Энергия по дням">
+  const last = pts.at(-1);
+  const ticks = [...new Set([0, ...Array.from({length:Math.floor((CFG.days-1)/4)}, (_, k) => (k+1)*4), CFG.days-1])];
+  return `<p class="p">Каждая точка показывает оценку энергии от 1 до 10. Дни без оценки пропущены; линия соединяет имеющиеся оценки.</p><p class="p">Последняя оценка: ${esc(human(addDays(CFG.start, last[0])))} · ${last[1]} из 10.</p><svg class="chart" viewBox="0 0 ${W} ${H+35}" role="img" aria-label="Энергия по датам">
     <defs><linearGradient id="ea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2b98a" stop-opacity=".55"/><stop offset="1" stop-color="#e2b98a" stop-opacity="0"/></linearGradient></defs>
     <line x1="24" x2="${W-24}" y1="${y(5)}" y2="${y(5)}" stroke="#c4925f" stroke-opacity=".35" stroke-dasharray="2 6"/>
     <path d="${area}" fill="url(#ea)"/>
     <path d="${line}" fill="none" stroke="url(#gg)" stroke-width="3.5" stroke-linecap="round"/>
-    ${pts.map(p => `<circle cx="${x(p[0])}" cy="${y(p[1])}" r="6" fill="#fffaf3" stroke="#a4613a" stroke-width="2.5"><title>День ${p[0]+1}: ${p[1]} из 10</title></circle>`).join('')}
+    ${pts.map(p => `<circle cx="${x(p[0])}" cy="${y(p[1])}" r="6" fill="#fffaf3" stroke="#a4613a" stroke-width="2.5"><title>${dateLabel(p[0])}: ${p[1]} из 10</title></circle>`).join('')}
     <text x="24" y="18" font-size="22" font-family="Manrope, sans-serif" fill="#7a6052">10</text>
     <text x="24" y="${H-1}" font-size="22" font-family="Manrope, sans-serif" fill="#7a6052">1</text>
+    ${ticks.map(i => `<text x="${x(i)}" y="${H+27}" text-anchor="middle" font-size="18" font-family="Manrope, sans-serif" fill="#7a6052">${dateLabel(i)}</text>`).join('')}
   </svg>`;
 }
 
