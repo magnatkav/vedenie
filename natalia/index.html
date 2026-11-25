@@ -205,7 +205,7 @@ const CFG = {
   name: 'Наталия',
   coach: 'Анатолий',
   start: '2026-11-02',
-  days: 21,
+  days: 30,
   tg: 'https://t.me/magnatavk',
   why: 'Мне, наверное, нужен какой-то пошаговый план, по которому бы я действовала',
   calls: [
@@ -323,6 +323,76 @@ const CFG = {
     "since": "2026-11-10",
     "until": "2026-11-22",
     "periodLabel": "с 10 ноября · продолжаем в удобном темпе"
+  },
+  {
+    "id": "food2_nov25",
+    "title": "Питание: продолжаю наблюдать",
+    "type": "days",
+    "unit": "дн.",
+    "start": 0,
+    "target": null,
+    "daily": "Записала питание в FatSecret",
+    "cadence": "daily",
+    "help": "Продолжай привычный учёт питания. Сегодня достаточно отметить, удалось ли записать.",
+    "since": "2026-11-25",
+    "until": "2026-12-01",
+    "periodLabel": "25 ?????? ? 1 ???????"
+  },
+  {
+    "id": "rest_nov25",
+    "title": "Время для отдыха",
+    "type": "days",
+    "unit": "дн.",
+    "start": 0,
+    "target": null,
+    "daily": "Выделила время для отдыха",
+    "cadence": "daily",
+    "help": "Отметь, если выделила время для подходящего тебе отдыха. В заметке можно написать, что помогло и было ли чувство вины. Строгого расписания пока нет.",
+    "since": "2026-11-25",
+    "until": "2026-12-01",
+    "periodLabel": "25 ?????? ? 1 ???????"
+  },
+  {
+    "id": "reels2_nov25",
+    "title": "Reels ? Instagram",
+    "type": "sum",
+    "unit": "видео",
+    "start": 0,
+    "target": null,
+    "daily": "??????? Reels ???????? ???????",
+    "cadence": "weekly",
+    "help": "???????? ?????????? ??????????, ? ??????? ?????. ???????, ????? ?????? ???????? ??????.",
+    "since": "2026-11-25",
+    "until": "2026-12-01",
+    "periodLabel": "25 ?????? ? 1 ???????"
+  },
+  {
+    "id": "tails2_nov25",
+    "title": "Посильное закрытие хвостов",
+    "type": "sum",
+    "unit": "дел",
+    "start": 0,
+    "target": null,
+    "daily": "Сколько хвостов закрыла сегодня",
+    "cadence": "weekly",
+    "help": "Отмечай законченные дела. Обязательной ежедневной нормы нет; если сегодня не закрывала хвосты, поле можно оставить пустым.",
+    "since": "2026-11-25",
+    "until": "2026-12-01",
+    "periodLabel": "25 ?????? ? 1 ???????"
+  },
+  {
+    "id": "instagram_step",
+    "title": "???? ??? ? Instagram",
+    "type": "days",
+    "unit": "??.",
+    "start": 0,
+    "target": null,
+    "daily": "??????? ???? ??? ? ?????????? ???????",
+    "cadence": "daily",
+    "help": "?????? ???? ????????? ????????. ????????, ?????? ???????? ??????? ??? ???????, ??????? ?? ?? ????, ??? ?????????? ?? ????????????.",
+    "since": "2026-11-25",
+    "until": "2026-12-01",
+    "periodLabel": "25 ?????? ? 1 ???????"
   }
 ],
   plan: [
@@ -354,6 +424,15 @@ const CFG = {
       "Оставляй время для себя. Если на прогулку есть 10–15 минут, этого достаточно, чтобы пройтись в удовольствие.",
       "Вечером запиши пару слов или наговори голосовую заметку. Когда темп работы, отдыха и сна тебе подходил? Что сбивало? Где хотелось замедлиться?",
       "Подумай, чем тебе хочется порадовать себя во вторник за то, что получилось на неделе."
+    ]
+  },
+  {
+    "week": 4,
+    "focus": "25 ?????? ? 1 ??????? ? Instagram",
+    "steps": [
+      "????????? ?????????? ???????, ????????? ????????? ?????? ? ????????? ????? ?? ?????.",
+      "????? ?? ?????? ???? ? ?????????? Instagram. ?????????? ???????? Reels ? ??????? ?????.",
+      "?????? ??? ????, ??? ?????????? ?? ?????? ??? ??????."
     ]
   }
 ],
@@ -408,7 +487,7 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 const plural = (n, a, b, c) => { const m = n % 100, k = n % 10; return (m > 10 && m < 20) ? c : k === 1 ? a : (k > 1 && k < 5) ? b : c; };
 // отметка до 4 утра считается за вчерашний вечер
 const today = () => { const d = new Date(); if (d.getHours() < 4) d.setDate(d.getDate() - 1); return iso(d); };
-const NOW = DEMO !== null ? addDays(CFG.start, FINAL ? CFG.days : 8) : today();
+const NOW = DEMO !== null ? addDays(CFG.start, FINAL ? 21 : 8) : today();
 
 /* ---------- данные ---------- */
 const LS = 'ved21_' + CFG.person;
@@ -484,7 +563,7 @@ async function flush() {
 }
 
 function demoMarks() {
-  const m = {}, rnd = i => (i * 7919 % 13) / 13, n = FINAL ? CFG.days : 8;
+  const m = {}, rnd = i => (i * 7919 % 13) / 13, n = FINAL ? 21 : 8;
   for (let i = 0; i < n; i++) {
     if (i === 6 || i === 15) continue;
     m[addDays(CFG.start, i)] = { g:{ g1:{ok:rnd(i)>.3?1:0, v:rnd(i)>.55?4000:0}, g2:{ok:rnd(i+2)>.2?1:0}, g3:{ok:rnd(i+1)>.25?1:0} }, e:Math.min(10, 5 + Math.round(rnd(i+2)*3) + (i > 12 ? 1 : 0)), n:'' };
@@ -559,7 +638,7 @@ function render() {
   const notesSec = noteList.length ? R(`<section class="sec" id="notes"><h2>Слово от ${CFG.coach === 'Анатолий' ? 'Анатолия' : esc(CFG.coach)}${unseen ? '<span class="new"><i></i>новое</span>' : ''}</h2>${noteHtml(noteList[0])}${noteList.length > 1 ? `<details><summary>Раньше (${noteList.length - 1})</summary><div style="margin-top:10px">${noteList.slice(1).map(noteHtml).join('')}</div></details>` : ''}</section>`, 2) : '';
 
   const energy = chart();
-  const wk = inside ? Math.min(CFG.plan.length, Math.max(1, Math.floor(diff(DEMO === null ? '2026-11-03' : CFG.start, now) / 7) + 1)) : 0;
+  const wk = inside && DEMO === null && now >= '2026-11-25' ? 4 : inside ? Math.min(CFG.plan.length, Math.max(1, Math.floor(diff(DEMO === null ? '2026-11-03' : CFG.start, now) / 7) + 1)) : 0;
   const plan = CFG.plan.length
     ? '<ol class="plan">' + CFG.plan.map((w, i) => `<li class="${i + 1 === wk ? 'cur' : i + 1 < wk ? 'was' : ''}"><b>${esc(w.focus)}</b>${i + 1 === wk ? '<em>сейчас</em>' : ''}<p>${w.steps.map(esc).join(' · ')}</p></li>`).join('') + '</ol>'
     : '<p class="p">План по неделям сложим вместе на первом созвоне.</p>';
